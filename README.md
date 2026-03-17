@@ -1,3 +1,5 @@
+Name : Priyansh Patel 
+Enrollment: 202307020089
 # ShopVibe - E-Commerce Frontend
 
 ShopVibe is a modern, visually appealing React-based e-commerce frontend application. Built to strict academic specifications, it delivers a premium UI experience with responsive layouts, smooth animations, and a cohesive design system.
