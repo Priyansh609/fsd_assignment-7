@@ -1,4 +1,4 @@
-Name : Priyansh Patel 
+Name : Priyansh Patel,
 Enrollment: 202307020089
 # ShopVibe - E-Commerce Frontend
 
