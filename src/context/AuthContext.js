@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AuthContext = createContext();
@@ -64,17 +64,6 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  const googleLogin = useCallback(async (credential) => {
-    const res = await axios.post(`${API_BASE}/api/auth/google`, {
-      credential,
-    });
-    const { token: newToken, ...userData } = res.data.data;
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
-    setUser(userData);
-    return res.data;
-  }, [API_BASE]);
-
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -85,7 +74,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isAuthenticated, loading, register, login, googleLogin, logout }}
+      value={{ user, token, isAuthenticated, loading, register, login, logout }}
     >
       {children}
     </AuthContext.Provider>
