@@ -7,7 +7,7 @@ const router = express.Router();
 // @route   POST /api/payment/pay
 // @desc    Process a mock payment
 // @access  Private
-router.post('/pay', protect, paymentValidator, async (req, res) => {
+router.post('/pay', protect, ...paymentValidator, async (req, res) => {
   try {
     const { amount, cardNumber, cardHolder } = req.body;
 

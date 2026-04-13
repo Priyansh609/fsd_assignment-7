@@ -14,7 +14,7 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @desc    Register a new user
 // @access  Public
-router.post('/register', registerValidator, async (req, res) => {
+router.post('/register', ...registerValidator, async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -55,7 +55,7 @@ router.post('/register', registerValidator, async (req, res) => {
 // @route   POST /api/auth/login
 // @desc    Login user & return JWT
 // @access  Public
-router.post('/login', loginValidator, async (req, res) => {
+router.post('/login', ...loginValidator, async (req, res) => {
   try {
     const { email, password } = req.body;
 

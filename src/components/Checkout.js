@@ -11,7 +11,7 @@ const Checkout = () => {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentResult, setPaymentResult] = useState(null);
 
-  const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const API_BASE = process.env.REACT_APP_API_URL || '';
 
   const handlePlaceOrder = async () => {
     if (!isAuthenticated) {
