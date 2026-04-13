@@ -1,23 +1,72 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 const Checkout = () => {
   const { cartItems, cartTotal, cartCount, clearCart } = useCart();
+  const { isAuthenticated, token } = useAuth();
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentResult, setPaymentResult] = useState(null);
 
-  const handlePlaceOrder = () => {
-    setOrderPlaced(true);
-    clearCart();
+  const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+  const handlePlaceOrder = async () => {
+    if (!isAuthenticated) {
+      setPaymentResult({
+        success: false,
+        message: 'Please sign in to place an order',
+      });
+      return;
+    }
+
+    setPaymentLoading(true);
+    setPaymentResult(null);
+
+    try {
+      const res = await axios.post(
+        `${API_BASE}/api/payment/pay`,
+        {
+          amount: (cartTotal * 1.08).toFixed(2),
+          cardNumber: '4111111111111111',
+          cardHolder: 'Test Customer',
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setPaymentResult(res.data);
+      setOrderPlaced(true);
+      clearCart();
+    } catch (err) {
+      setPaymentResult(
+        err.response?.data || {
+          success: false,
+          message: 'Payment failed. Please try again.',
+        }
+      );
+    } finally {
+      setPaymentLoading(false);
+    }
   };
 
-  if (orderPlaced) {
+  if (orderPlaced && paymentResult?.success) {
     return (
       <div className="page-container">
         <div className="empty-state success-state">
           <div className="empty-state-icon">🎉</div>
           <h2>Order Placed Successfully!</h2>
           <p>Thank you for your purchase. Your order is being processed.</p>
+          {paymentResult.data && (
+            <div className="payment-receipt">
+              <p><strong>Transaction ID:</strong> {paymentResult.data.transactionId}</p>
+              <p><strong>Amount Paid:</strong> ${paymentResult.data.amount}</p>
+              <p><strong>Status:</strong> {paymentResult.data.status}</p>
+            </div>
+          )}
           <Link to="/" className="btn btn-primary">
             Continue Shopping
           </Link>
@@ -26,7 +75,7 @@ const Checkout = () => {
     );
   }
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !orderPlaced) {
     return (
       <div className="page-container">
         <div className="empty-state">
@@ -47,6 +96,13 @@ const Checkout = () => {
         <h1>Checkout</h1>
         <p className="page-subtitle">Review your order before placing it</p>
       </div>
+
+      {paymentResult && !paymentResult.success && (
+        <div className="auth-error" style={{ marginBottom: '20px' }}>
+          {paymentResult.message}
+        </div>
+      )}
+
       <div className="checkout-layout">
         <div className="checkout-items">
           <h3>Order Items</h3>
@@ -84,11 +140,19 @@ const Checkout = () => {
             <span>Total</span>
             <span>${(cartTotal * 1.08).toFixed(2)}</span>
           </div>
+
+          {!isAuthenticated && (
+            <div className="checkout-auth-notice">
+              <p>⚠️ Please <Link to="/login">sign in</Link> to place your order</p>
+            </div>
+          )}
+
           <button
             onClick={handlePlaceOrder}
             className="btn btn-primary btn-lg btn-block"
+            disabled={paymentLoading || !isAuthenticated}
           >
-            🛍️ Place Order
+            {paymentLoading ? '⏳ Processing Payment...' : '🛍️ Place Order'}
           </button>
           <Link to="/cart" className="btn btn-outline btn-block">
             ← Back to Cart

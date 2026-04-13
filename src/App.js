@@ -4,11 +4,15 @@ import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import Login from './components/Login';
+import Register from './components/Register';
 import { useCart } from './context/CartContext';
+import { useAuth } from './context/AuthContext';
 import './App.css';
 
 const Navbar = () => {
   const { cartCount } = useCart();
+  const { isAuthenticated, user, logout } = useAuth();
 
   return (
     <nav className="navbar">
@@ -29,6 +33,21 @@ const Navbar = () => {
               <span className="cart-badge">{cartCount}</span>
             )}
           </Link>
+          {isAuthenticated ? (
+            <>
+              <span className="nav-user">
+                <span className="nav-icon">👤</span>
+                {user?.name?.split(' ')[0]}
+              </span>
+              <button onClick={logout} className="btn btn-outline btn-sm nav-logout-btn">
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="btn btn-primary btn-sm">
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </nav>
@@ -46,6 +65,8 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
         <footer className="footer">

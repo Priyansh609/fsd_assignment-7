@@ -1,83 +1,172 @@
-Name : Priyansh Patel,
-Enrollment: 202307020089
-# ShopVibe - E-Commerce Frontend
+# ShopVibe - E-Commerce Application
 
-ShopVibe is a modern, visually appealing React-based e-commerce frontend application. Built to strict academic specifications, it delivers a premium UI experience with responsive layouts, smooth animations, and a cohesive design system.
+A full-stack e-commerce application with a React frontend and Express.js backend, featuring JWT authentication, payment processing mockup, image uploads, and API testing.
 
-## 🌟 Key Features
+## 🌟 Features
 
-*   **Product Listing:** A clean, responsive grid layout for browsing products fetched dynamically from an API.
-*   **Product Details:** An in-depth view for individual products, complete with high-quality images, descriptions, ratings, and a clear "Add to Cart" action.
-*   **Shopping Cart:** A fully functional cart system. Users can add items, view quantities, see individual item subtotals, and remove items. Includes a polished empty state.
-*   **Checkout Process:** A structured order summary including order items, subtotal, tax calculation, and a simulated "Place Order" success flow.
-*   **Global State Management:** Seamless state handling across components using React Context API.
-*   **Dynamic Routing:** Smooth navigation between pages built with React Router.
-*   **Premium UI/UX:**
-    *   Custom warm brown/cream color palette (`#FFF8F0`, `#C08552`, `#8C5A3C`, `#4B2E2B`).
-    *   Glassmorphic navbar with an interactive cart badge.
-    *   Card-based layouts with smooth hover animations and shadow transitions.
-    *   Modern typography using the 'Poppins' font family.
+### Frontend (React)
+- **Product Listing** — Responsive grid with FakeStore API
+- **Product Details** — Full product view with Add to Cart
+- **Shopping Cart** — Add/remove items, quantity tracking
+- **Checkout** — Payment processing via backend API
+- **Authentication** — Login & Register pages
+- **Premium UI** — Warm brown/cream palette, Poppins font, animations
 
-## 🛠️ Technology Stack
+### Backend (Express.js)
+- **JWT Authentication** — Register, Login, Protected routes
+- **Payment Mockup** — Simulated payment with success/failure responses
+- **Image Upload** — Multer-based file upload (images only, 5MB limit)
+- **Data Validation** — express-validator on all input
+- **MongoDB** — Mongoose ORM with User & Product models
 
-*   **Frontend Library:** React (Functional Components & Hooks)
-*   **Routing:** React Router v6
-*   **State Management:** React Context API
-*   **API Client:** Axios
-*   **Styling:** Vanilla CSS (Custom Design System)
-*   **Data Source:** FakeStore API
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React, React Router v6, Context API, Axios |
+| Backend | Express.js, Node.js |
+| Database | MongoDB (Mongoose) |
+| Auth | JWT, bcryptjs |
+| Upload | Multer |
+| Validation | express-validator |
+| Styling | Vanilla CSS (Custom Design System) |
 
 ## 📂 Project Structure
 
-```text
-src/
-├── components/
-│   ├── ProductList.js    # Renders the product grid with cards
-│   ├── ProductDetail.js  # Renders the individual product view
-│   ├── Cart.js           # Manages cart items and order summary sidebar
-│   └── Checkout.js       # Displays final payment summary and places order
-├── context/
-│   └── CartContext.js    # Global state management for cart operations
-├── services/
-│   └── api.js            # Axios service for FakeStore API communication
-├── App.js                # Main application component with routing and navbar
-├── App.css               # Global styles and central design system
-└── index.js              # Application entry point wrapped with CartProvider
+```
+fsd_practical-7/
+├── server/                      # Express.js Backend
+│   ├── config/db.js             # MongoDB connection
+│   ├── middleware/
+│   │   ├── auth.js              # JWT verification middleware
+│   │   └── upload.js            # Multer config (images, 5MB)
+│   ├── models/
+│   │   ├── User.js              # User schema (bcrypt hashing)
+│   │   └── Product.js           # Product schema
+│   ├── routes/
+│   │   ├── auth.js              # /api/auth — register, login, me
+│   │   ├── payment.js           # /api/payment — mock payment
+│   │   └── upload.js            # /api/upload — image upload
+│   ├── validators/index.js      # Validation rules
+│   └── index.js                 # Server entry point
+├── src/                         # React Frontend
+│   ├── components/
+│   │   ├── ProductList.js
+│   │   ├── ProductDetail.js
+│   │   ├── Cart.js
+│   │   ├── Checkout.js
+│   │   ├── Login.js
+│   │   └── Register.js
+│   ├── context/
+│   │   ├── CartContext.js
+│   │   └── AuthContext.js
+│   ├── services/api.js
+│   ├── App.js
+│   ├── App.css
+│   └── index.js
+├── postman/
+│   └── ShopVibe_API.postman_collection.json
+├── uploads/                     # Uploaded images (gitignored)
+├── .env                         # Secrets (gitignored)
+└── package.json
 ```
 
 ## 🚀 Getting Started
 
-To run this project locally, follow these steps:
-
 ### Prerequisites
+- Node.js (v18+)
+- MongoDB Atlas account (free tier) or local MongoDB
 
-Ensure you have Node.js and npm installed on your machine.
+### 1. Clone & Install
 
-### Installation
+```bash
+git clone https://github.com/Priyansh609/fsd_assignment-7.git
+cd fsd_assignment-7
+npm install
+```
 
-1.  **Clone the repository (if applicable) or navigate to the project directory:**
-    ```bash
-    cd fsd_practical-7
-    ```
+### 2. Configure Environment
 
-2.  **Install the dependencies:**
-    ```bash
-    npm install
-    ```
+Create a `.env` file in the root:
 
-3.  **Start the development server:**
-    ```bash
-    npm start
-    ```
+```env
+PORT=5000
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/shopvibe?retryWrites=true&w=majority
+JWT_SECRET=your_jwt_secret_key_here
+```
 
-4.  **Open in Browser:**
-    The application will automatically open in your default browser at `http://localhost:3000`. If it doesn't, navigate to that URL manually.
+### 3. Run the Application
 
-## 💡 Usage Highlights
+```bash
+# Run both frontend + backend concurrently
+npm run dev
 
-*   **Responsive Design:** The layout automatically adjusts for desktop, tablet, and mobile devices, ensuring a consistent experience.
-*   **Visual Feedback:** Interactive elements like buttons and product cards provide immediate visual cues (scale effects, color changes) upon user interaction.
-*   **Loading States:** Dedicated loading spinners are implemented while data is being fetched from the API to handle asynchronous wait times gracefully.
+# Or run separately:
+npm run server   # Backend on :5000
+npm start        # Frontend on :3000
+```
+
+## 📡 API Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/health` | No | Health check |
+| POST | `/api/auth/register` | No | Register user |
+| POST | `/api/auth/login` | No | Login user |
+| GET | `/api/auth/me` | Yes | Get profile |
+| POST | `/api/payment/pay` | Yes | Mock payment |
+| POST | `/api/upload` | Yes | Upload image |
+
+### Example: Register
+```json
+POST /api/auth/register
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+### Example: Login
+```json
+POST /api/auth/login
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+### Example: Payment
+```json
+POST /api/payment/pay
+Authorization: Bearer <token>
+{
+  "amount": 99.99,
+  "cardNumber": "4111111111111111",
+  "cardHolder": "John Doe"
+}
+```
+
+## 🧪 Postman Testing
+
+Import the collection from `postman/ShopVibe_API.postman_collection.json` into Postman.
+
+The collection includes:
+- ✅ Auto-token extraction (register/login → saves token automatically)
+- ✅ Validation error tests (empty body, missing fields)
+- ✅ Unauthorized access tests (no token → 401)
+- ✅ All CRUD operations with example data
+
+## 📋 Validation Rules
+
+| Field | Rule |
+|-------|------|
+| `name` | Required, min 2 chars |
+| `email` | Required, valid email format |
+| `password` | Required, min 6 chars |
+| `amount` | Required, > 0 |
+| `cardNumber` | Required, 13–19 digits |
+| `image` | Images only (jpeg, jpg, png, gif, webp), max 5MB |
 
 ---
-*Built with ❤️ using React*
+*Built with  using React & Express.js*
