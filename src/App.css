@@ -830,6 +830,35 @@ body {
   text-decoration: underline;
 }
 
+/* ===== GOOGLE AUTH ===== */
+.google-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.google-btn-wrapper > div {
+  width: 100% !important;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+  color: var(--text-light);
+  font-size: 0.85rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+
 /* ===== NAVBAR AUTH ===== */
 .nav-user {
   display: flex;

@@ -1,13 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
 const Login = () => {
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const handleGoogleResponse = useCallback(async (response) => {
+    setLoading(true);
+    setError('');
+    try {
+      await googleLogin(response.credential);
+      navigate('/');
+    } catch (err) {
+      const msg =
+        err.response?.data?.message || 'Google sign-in failed. Try again.';
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  }, [googleLogin, navigate]);
+
+  useEffect(() => {
+    if (GOOGLE_CLIENT_ID && window.google) {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse,
+      });
+      window.google.accounts.id.renderButton(
+        document.getElementById('google-signin-btn'),
+        {
+          theme: 'outline',
+          size: 'large',
+          width: '100%',
+          text: 'signin_with',
+          shape: 'rectangular',
+        }
+      );
+    }
+  }, [handleGoogleResponse]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,6 +79,15 @@ const Login = () => {
           </div>
 
           {error && <div className="auth-error">{error}</div>}
+
+          {GOOGLE_CLIENT_ID && (
+            <>
+              <div id="google-signin-btn" className="google-btn-wrapper"></div>
+              <div className="auth-divider">
+                <span>or</span>
+              </div>
+            </>
+          )}
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
